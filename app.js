@@ -117,6 +117,36 @@ function setupAccessibility() {
         btn.addEventListener('click', closeCurrentPage);
     });
     
+    // Gestion du guide de navigation (toggle)
+    const guideToggleBtn = document.getElementById('guide-toggle');
+    const guideOverlay = document.getElementById('guide-overlay');
+    
+    if (guideToggleBtn && guideOverlay) {
+        guideToggleBtn.addEventListener('click', () => {
+            if (guideOverlay.classList.contains('active')) {
+                // Fermer le guide
+                guideOverlay.classList.remove('active');
+                setTimeout(() => {
+                    guideOverlay.classList.add('hidden');
+                }, 300);
+            } else {
+                // Ouvrir le guide
+                guideOverlay.classList.remove('hidden');
+                guideOverlay.classList.add('active');
+            }
+        });
+        
+        // Fermer en cliquant sur l'overlay (mais pas sur le modal)
+        guideOverlay.addEventListener('click', (e) => {
+            if (e.target === guideOverlay) {
+                guideOverlay.classList.remove('active');
+                setTimeout(() => {
+                    guideOverlay.classList.add('hidden');
+                }, 300);
+            }
+        });
+    }
+    
     // Formulaire de contact
     const contactForm = document.querySelector('.contact-form');
     if (contactForm) {
@@ -446,6 +476,10 @@ function startExperience() {
         introScreen.classList.add('hidden');
         cubeCanvas.classList.remove('hidden');
         cubeContainer.classList.remove('hidden');
+        const guideToggleBtn = document.getElementById('guide-toggle');
+        if (guideToggleBtn) {
+            guideToggleBtn.classList.remove('hidden');
+        }
         state.currentScreen = 'cube';
     }, 3000);
 }
@@ -544,11 +578,24 @@ function openPage(faceIndex) {
     
     // Afficher la page sélectionnée
     pageElement.classList.add('active');
-    pagesOverlay.classList.add('active');
-    pagesOverlay.classList.remove('hidden');
-    closePageBtn.classList.remove('hidden');
-    
-    state.currentPage = faceIndex;
+        pagesOverlay.classList.add('active');
+        pagesOverlay.classList.remove('hidden');
+        closePageBtn.classList.remove('hidden');
+        
+        // Masquer le bouton guide et fermer le guide si ouvert quand une page est ouverte
+        const guideToggleBtn = document.getElementById('guide-toggle');
+        const guideOverlay = document.getElementById('guide-overlay');
+        if (guideToggleBtn) {
+            guideToggleBtn.classList.add('hidden');
+        }
+        if (guideOverlay && guideOverlay.classList.contains('active')) {
+            guideOverlay.classList.remove('active');
+            setTimeout(() => {
+                guideOverlay.classList.add('hidden');
+            }, 300);
+        }
+        
+        state.currentPage = faceIndex;
     state.currentScreen = 'page';
     state.autoRotate = false;
     
@@ -604,6 +651,12 @@ function closeCurrentPage() {
     state.currentPage = null;
     state.currentScreen = 'cube';
     state.autoRotate = !CONFIG.reduceMotion;
+    
+    // S'assurer que le bouton guide est visible
+    const guideToggleBtn = document.getElementById('guide-toggle');
+    if (guideToggleBtn) {
+        guideToggleBtn.classList.remove('hidden');
+    }
 }
 
 // Gestion de la souris pour faire tourner

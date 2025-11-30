@@ -360,156 +360,6 @@ body::before {
     padding: 2rem;
 }
 
-/* Overlay du guide de navigation */
-.guide-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 300;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.7);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--transition-speed) var(--cubic-bezier);
-}
-
-.guide-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.guide-modal {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.85) 100%);
-    -webkit-backdrop-filter: blur(30px);
-    backdrop-filter: blur(30px);
-    border-radius: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 80px rgba(52, 152, 219, 0.2);
-    max-width: 500px;
-    width: 90%;
-    overflow: hidden;
-    transform: scale(0.8) translateY(20px);
-    transition: transform var(--transition-speed) var(--cubic-bezier);
-    position: relative;
-}
-
-.guide-overlay.active .guide-modal {
-    transform: scale(1) translateY(0);
-}
-
-.guide-header {
-    padding: 1.5rem 2rem 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
-}
-
-.guide-content {
-    padding: 1.5rem 2rem 2rem;
-}
-
-.guide-title {
-    font-size: clamp(1.5rem, 3vw, 1.8rem);
-    margin: 0;
-    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Instructions compactes */
-.guide-instructions-compact {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    margin-bottom: 1.5rem;
-}
-
-.instruction-compact {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.8rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s var(--cubic-bezier);
-    font-size: 0.95rem;
-    color: var(--text-color);
-    opacity: 0.9;
-}
-
-.instruction-compact:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--secondary-color);
-    transform: translateX(3px);
-}
-
-.instruction-icon-svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    stroke: var(--secondary-color);
-}
-
-/* Pages compactes */
-.guide-pages-compact {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.guide-pages-title {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    color: var(--secondary-color);
-    font-weight: 600;
-}
-
-.pages-grid-compact {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
-}
-
-.page-guide-compact {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.7rem 0.9rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s var(--cubic-bezier);
-    cursor: pointer;
-    pointer-events: all;
-}
-
-.page-guide-compact:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--secondary-color);
-    transform: translateY(-2px);
-}
-
-.page-color-dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-}
-
-.page-name {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    font-weight: 500;
-}
-
 /* Couleurs spécifiques pour chaque page */
 .color-accueil {
     background-color: #3498db;
@@ -980,6 +830,386 @@ body::before {
     opacity: 0.8;
 }
 
+/* Styles pour la page d'accueil améliorée */
+.home-intro {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.home-intro h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.intro-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+    text-align: left;
+}
+
+.features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s var(--cubic-bezier);
+}
+
+.feature-item:hover {
+    transform: translateX(10px);
+    border-color: var(--secondary-color);
+    box-shadow: 0 10px 30px rgba(52, 152, 219, 0.2);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.feature-item h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondary-color);
+}
+
+.feature-item p {
+    opacity: 0.8;
+    line-height: 1.6;
+}
+
+/* Styles pour la page Services améliorée */
+.services-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.services-intro {
+    text-align: center;
+    font-size: 1.3rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.service-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    opacity: 0.85;
+    text-align: left;
+}
+
+.service-features {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.service-features li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
+.service-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+/* Styles pour la page Concept améliorée */
+.concept-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.concept-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.concept-details {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.concept-section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.concept-section h4 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+}
+
+.concept-section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    opacity: 0.9;
+}
+
+.concept-item {
+    min-width: 250px;
+}
+
+.concept-item p {
+    text-align: left;
+    line-height: 1.7;
+}
+
+/* Styles pour la page Équipe améliorée */
+.team-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.team-header h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.team-intro {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.team-card.leader {
+    border: 2px solid var(--secondary-color);
+    box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+}
+
+.team-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.team-role {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.team-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.85;
+    text-align: left;
+    margin-top: 1rem;
+}
+
+/* Styles pour la page À propos améliorée */
+.about-section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-section h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.about-section h4 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+}
+
+.about-section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.value-item {
+    background: rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s var(--cubic-bezier);
+}
+
+.value-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--secondary-color);
+    box-shadow: 0 10px 30px rgba(52, 152, 219, 0.2);
+}
+
+.value-item h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+    color: var(--secondary-color);
+}
+
+.value-item p {
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+/* Styles pour la page Contact améliorée */
+.contact-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.contact-header h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.contact-intro {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto 1rem;
+    line-height: 1.7;
+}
+
+.contact-info {
+    font-size: 1rem;
+    opacity: 0.8;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--secondary-color);
+    opacity: 0.9;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+}
+
+.submit-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 1.2rem 2rem;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s var(--cubic-bezier);
+    box-shadow: 
+        0 5px 20px rgba(102, 126, 234, 0.4),
+        0 0 30px rgba(118, 75, 162, 0.2);
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.submit-button:hover::before {
+    left: 100%;
+}
+
+.submit-button:hover {
+    transform: scale(1.05);
+    box-shadow: 
+        0 10px 30px rgba(102, 126, 234, 0.6),
+        0 0 50px rgba(118, 75, 162, 0.4);
+}
+
 /* Contrôles d'accessibilité */
 .accessibility-controls {
     position: fixed;
@@ -991,10 +1221,10 @@ body::before {
 }
 
 .accessibility-btn {
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(155, 89, 182, 0.2) 100%);
-    -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -1004,55 +1234,17 @@ body::before {
     cursor: pointer;
     transition: all 0.3s var(--cubic-bezier);
     color: var(--text-color);
-    position: relative;
-    overflow: hidden;
-}
-
-.accessibility-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.3) 0%, rgba(155, 89, 182, 0.3) 100%);
-    opacity: 0;
-    transition: opacity 0.3s var(--cubic-bezier);
-    border-radius: 50%;
-}
-
-.accessibility-btn:hover::before {
-    opacity: 1;
+    font-size: 1.2rem;
 }
 
 .accessibility-btn:hover {
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.4) 0%, rgba(155, 89, 182, 0.4) 100%);
+    background: rgba(255, 255, 255, 0.1);
     transform: scale(1.1);
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 20px rgba(52, 152, 219, 0.4);
 }
 
 .accessibility-btn.active {
-    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    background: var(--secondary-color);
     border-color: var(--secondary-color);
-    box-shadow: 0 0 25px rgba(52, 152, 219, 0.6);
-}
-
-.accessibility-btn .icon {
-    width: 22px;
-    height: 22px;
-    stroke: currentColor;
-    position: relative;
-    z-index: 1;
-    transition: transform 0.3s var(--cubic-bezier);
-}
-
-.accessibility-btn:hover .icon {
-    transform: rotate(15deg);
-}
-
-.accessibility-btn.active .icon {
-    transform: rotate(90deg);
 }
 
 /* Mode réduction de mouvement */
@@ -1084,309 +1276,6 @@ body::before {
     background: var(--accent-color);
 }
 
-/* Styles pour la page Accueil améliorée */
-.home-intro {
-    text-align: center;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.home-intro h3 {
-    font-size: clamp(2rem, 4vw, 2.5rem);
-    margin-bottom: 1.5rem;
-    color: var(--secondary-color);
-}
-
-.intro-text {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-    opacity: 0.9;
-    text-align: left;
-}
-
-.features-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s var(--cubic-bezier);
-}
-
-.feature-item:hover {
-    transform: translateX(10px);
-    border-color: var(--secondary-color);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.feature-icon {
-    font-size: 2.5rem;
-    flex-shrink: 0;
-}
-
-.feature-item h4 {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-    color: var(--secondary-color);
-}
-
-.feature-item p {
-    font-size: 1rem;
-    opacity: 0.8;
-    margin: 0;
-}
-
-/* Styles pour la page Services améliorée */
-.services-intro {
-    text-align: center;
-    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-    margin-bottom: 2rem;
-    opacity: 0.9;
-}
-
-.service-description {
-    font-size: 1rem;
-    line-height: 1.7;
-    margin-bottom: 1rem;
-    opacity: 0.85;
-}
-
-.service-features {
-    list-style: none;
-    padding: 0;
-    margin-top: 1rem;
-    text-align: left;
-}
-
-.service-features li {
-    padding: 0.5rem 0;
-    padding-left: 1.5rem;
-    position: relative;
-    font-size: 0.95rem;
-    opacity: 0.8;
-}
-
-.service-features li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--secondary-color);
-    font-weight: bold;
-}
-
-/* Styles pour la page Concept améliorée */
-.concept-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.concept-title {
-    font-size: clamp(2rem, 4vw, 2.5rem);
-    margin-bottom: 1rem;
-    color: var(--secondary-color);
-}
-
-.concept-sections {
-    margin-bottom: 3rem;
-}
-
-.concept-section {
-    background: rgba(255, 255, 255, 0.05);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.concept-section h4 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--secondary-color);
-}
-
-.concept-section p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    opacity: 0.9;
-}
-
-/* Styles pour la page Equipes améliorée */
-.team-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.team-header h3 {
-    font-size: clamp(2rem, 4vw, 2.5rem);
-    margin-bottom: 1rem;
-    color: var(--secondary-color);
-}
-
-.team-intro {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    line-height: 1.8;
-    opacity: 0.9;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.team-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, #f39c12, #e67e22);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.team-role {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--secondary-color);
-    margin-bottom: 0.5rem;
-}
-
-.team-description {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    opacity: 0.85;
-    margin-top: 0.5rem;
-}
-
-/* Styles pour la page À propos améliorée */
-.about-section {
-    margin-bottom: 2.5rem;
-}
-
-.about-section h3 {
-    font-size: clamp(1.8rem, 3vw, 2.2rem);
-    margin-bottom: 1rem;
-    color: var(--secondary-color);
-}
-
-.about-section p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin-bottom: 1rem;
-    opacity: 0.9;
-}
-
-.values-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.value-item {
-    background: rgba(255, 255, 255, 0.05);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 1.5rem;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s var(--cubic-bezier);
-}
-
-.value-item:hover {
-    transform: translateY(-5px);
-    border-color: var(--secondary-color);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.value-icon {
-    font-size: 2.5rem;
-    display: block;
-    margin-bottom: 1rem;
-}
-
-.value-item h4 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: var(--secondary-color);
-}
-
-.value-item p {
-    font-size: 0.95rem;
-    opacity: 0.8;
-    margin: 0;
-}
-
-/* Styles pour la page Contact améliorée */
-.contact-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.contact-header h3 {
-    font-size: clamp(2rem, 4vw, 2.5rem);
-    margin-bottom: 1rem;
-    color: var(--secondary-color);
-}
-
-.contact-intro {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    line-height: 1.8;
-    opacity: 0.9;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.contact-form label {
-    font-size: 1rem;
-    color: var(--secondary-color);
-    margin-bottom: 0.5rem;
-    display: block;
-    font-weight: 500;
-}
-
-.contact-info {
-    margin-top: 3rem;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.05);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
-}
-
-.contact-info h4 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--secondary-color);
-}
-
-.contact-info p {
-    font-size: 1rem;
-    line-height: 1.8;
-    margin-bottom: 0.5rem;
-    opacity: 0.9;
-}
-
-.contact-info strong {
-    color: var(--secondary-color);
-}
-
 /* Responsive */
 @media (max-width: 768px) {
     .welcome-content,
@@ -1407,67 +1296,10 @@ body::before {
         gap: 2rem;
     }
 
-    .concept-sections {
-        margin-bottom: 2rem;
-    }
-
-    .concept-section {
-        padding: 1.5rem;
-    }
-
-    .team-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .values-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .features-list {
-        gap: 1rem;
-    }
-
-    .feature-item {
-        padding: 1rem;
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .feature-item:hover {
-        transform: translateY(-5px);
-    }
-
-    .intro-text {
-        text-align: center;
-    }
-
     .cube-container {
         flex-direction: column;
         gap: 2rem;
         padding: 1rem;
-    }
-
-    .guide-modal {
-        max-width: 95%;
-        width: 95%;
-    }
-
-    .guide-header {
-        padding: 1.2rem 1.5rem 0.8rem;
-        text-align: center;
-    }
-
-    .guide-content {
-        padding: 1.2rem 1.5rem 1.5rem;
-    }
-
-    .pages-grid-compact {
-        grid-template-columns: 1fr;
-    }
-
-    .instruction-compact {
-        padding: 0.7rem 0.9rem;
-        font-size: 0.9rem;
     }
 
     .accessibility-controls {
@@ -1486,6 +1318,48 @@ body::before {
     .close-page-btn {
         width: 60px;
         height: 60px;
+    }
+}
+
+/* Responsive pour les nouvelles sections */
+@media (max-width: 768px) {
+    .features-list {
+        gap: 1rem;
+    }
+
+    .feature-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .concept-visual {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-intro h3,
+    .concept-title,
+    .team-header h3,
+    .contact-header h3 {
+        font-size: 1.5rem;
+    }
+
+    .intro-text,
+    .concept-section p,
+    .about-section p {
+        font-size: 1rem;
     }
 }
 

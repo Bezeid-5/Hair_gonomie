@@ -19,10 +19,25 @@
     <!-- Contrôles d'accessibilité -->
     <div class="accessibility-controls">
         <button id="reduce-motion" class="accessibility-btn" aria-label="Réduire les animations">
-            <span>⚙️</span>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+            </svg>
         </button>
         <button id="close-page" class="accessibility-btn hidden" aria-label="Fermer la page">
-            <span>✕</span>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <button id="guide-toggle" class="accessibility-btn hidden" aria-label="Ouvrir le guide">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                <path d="M8 7h6"></path>
+                <path d="M8 11h6"></path>
+                <path d="M8 15h4"></path>
+            </svg>
         </button>
     </div>
 
@@ -60,6 +75,64 @@
         <div id="cube-container" class="cube-container hidden">
         </div>
 
+        <!-- Overlay du guide de navigation -->
+        <div id="guide-overlay" class="guide-overlay hidden">
+            <div class="guide-modal">
+                <div class="guide-header">
+                    <h2 class="guide-title">Guide de Navigation</h2>
+                </div>
+                <div class="guide-content">
+                    <div class="guide-instructions-compact">
+                        <div class="instruction-compact">
+                            <svg class="instruction-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+                            </svg>
+                            <span>Molette ou glisser pour tourner</span>
+                        </div>
+                        <div class="instruction-compact">
+                            <svg class="instruction-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Cliquer sur une face pour ouvrir</span>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-pages-compact">
+                        <h3 class="guide-pages-title">Pages</h3>
+                        <div class="pages-grid-compact">
+                            <div class="page-guide-compact" data-color="accueil">
+                                <span class="page-color-dot color-accueil"></span>
+                                <span class="page-name">Accueil</span>
+                            </div>
+                            <div class="page-guide-compact" data-color="services">
+                                <span class="page-color-dot color-services"></span>
+                                <span class="page-name">Services</span>
+                            </div>
+                            <div class="page-guide-compact" data-color="concept">
+                                <span class="page-color-dot color-concept"></span>
+                                <span class="page-name">Concept</span>
+                            </div>
+                            <div class="page-guide-compact" data-color="equipes">
+                                <span class="page-color-dot color-equipes"></span>
+                                <span class="page-name">Equipes</span>
+                            </div>
+                            <div class="page-guide-compact" data-color="about">
+                                <span class="page-color-dot color-about"></span>
+                                <span class="page-name">À propos</span>
+                            </div>
+                            <div class="page-guide-compact" data-color="contact">
+                                <span class="page-color-dot color-contact"></span>
+                                <span class="page-name">Contact</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Conteneur des pages (qui s'ouvrent depuis le cube) -->
         <div id="pages-overlay" class="pages-overlay hidden">
             <!-- Page Accueil -->
@@ -73,8 +146,42 @@
                         <div class="page-visual">
                             <div class="floating-shape"></div>
                         </div>
-                        <p>Bienvenue dans l'univers Hair'gonomie, où l'innovation rencontre l'esthétique.</p>
-                        <p>Découvrez une nouvelle façon d'interagir avec le contenu.</p>
+                        <div class="home-intro">
+                            <h3>Bienvenue dans Hair'gonomie</h3>
+                            <p class="intro-text">
+                                Hair'gonomie est une application révolutionnaire qui transforme l'expérience de navigation web 
+                                en une aventure interactive et immersive. Notre concept unique combine l'ergonomie moderne avec 
+                                une esthétique avant-gardiste pour créer une interface utilisateur inoubliable.
+                            </p>
+                            <p class="intro-text">
+                                Au lieu des menus traditionnels et des barres de navigation classiques, nous avons créé un 
+                                univers 3D interactif où chaque face d'un cube géométrique représente une section de notre site. 
+                                Cette approche innovante permet une navigation intuitive, fluide et visuellement captivante.
+                            </p>
+                            <div class="features-list">
+                                <div class="feature-item">
+                                    <span class="feature-icon">🎯</span>
+                                    <div>
+                                        <h4>Navigation Intuitive</h4>
+                                        <p>Explorez notre contenu en interagissant naturellement avec une forme 3D</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">✨</span>
+                                    <div>
+                                        <h4>Expérience Immersive</h4>
+                                        <p>Plongez dans un univers visuel unique qui transforme votre façon de naviguer</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">🚀</span>
+                                    <div>
+                                        <h4>Innovation Technologique</h4>
+                                        <p>Utilisation des dernières technologies 3D pour une expérience fluide et performante</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,21 +194,85 @@
                         <button class="close-page-btn">✕</button>
                     </div>
                     <div class="page-body">
+                        <p class="services-intro">Découvrez notre gamme complète de services professionnels</p>
                         <div class="services-grid">
                             <div class="service-card">
                                 <div class="service-icon">✂️</div>
-                                <h3>Coupe</h3>
-                                <p>Création de coupes sur mesure adaptées à votre style</p>
+                                <h3>Coupe sur Mesure</h3>
+                                <p class="service-description">
+                                    Nos experts créent des coupes personnalisées qui mettent en valeur votre personnalité 
+                                    et s'adaptent parfaitement à votre morphologie et à votre style de vie.
+                                </p>
+                                <ul class="service-features">
+                                    <li>Consultation personnalisée</li>
+                                    <li>Techniques de coupe modernes</li>
+                                    <li>Conseils de style adaptés</li>
+                                </ul>
                             </div>
                             <div class="service-card">
                                 <div class="service-icon">🎨</div>
-                                <h3>Coloration</h3>
-                                <p>Techniques de coloration avancées et tendances</p>
+                                <h3>Coloration Avancée</h3>
+                                <p class="service-description">
+                                    Techniques de coloration de pointe avec des produits de qualité professionnelle. 
+                                    Du balayage subtil aux transformations radicales, nous réalisons vos rêves capillaires.
+                                </p>
+                                <ul class="service-features">
+                                    <li>Coloration créative</li>
+                                    <li>Balayage et ombré</li>
+                                    <li>Soins post-coloration</li>
+                                </ul>
                             </div>
                             <div class="service-card">
                                 <div class="service-icon">💆</div>
-                                <h3>Soins</h3>
-                                <p>Soins capillaires personnalisés et traitements</p>
+                                <h3>Soins Capillaires</h3>
+                                <p class="service-description">
+                                    Traitements capillaires personnalisés pour restaurer, nourrir et protéger vos cheveux. 
+                                    Nos soins utilisent des produits naturels et des techniques professionnelles.
+                                </p>
+                                <ul class="service-features">
+                                    <li>Traitements réparateurs</li>
+                                    <li>Masques nutritifs</li>
+                                    <li>Conseils d'entretien</li>
+                                </ul>
+                            </div>
+                            <div class="service-card">
+                                <div class="service-icon">💇</div>
+                                <h3>Styling Professionnel</h3>
+                                <p class="service-description">
+                                    Coiffures pour tous vos événements spéciaux. De la coiffure de mariage au brushing 
+                                    quotidien, nos stylistes créent des looks qui vous ressemblent.
+                                </p>
+                                <ul class="service-features">
+                                    <li>Coiffures de soirée</li>
+                                    <li>Brushing et mise en plis</li>
+                                    <li>Conseils de coiffage</li>
+                                </ul>
+                            </div>
+                            <div class="service-card">
+                                <div class="service-icon">🌟</div>
+                                <h3>Consultation Image</h3>
+                                <p class="service-description">
+                                    Accompagnement complet pour définir votre style capillaire idéal. Analyse de votre 
+                                    morphologie, de votre teint et de votre personnalité pour un résultat parfait.
+                                </p>
+                                <ul class="service-features">
+                                    <li>Analyse personnalisée</li>
+                                    <li>Conseils de style</li>
+                                    <li>Suivi personnalisé</li>
+                                </ul>
+                            </div>
+                            <div class="service-card">
+                                <div class="service-icon">💅</div>
+                                <h3>Services Complémentaires</h3>
+                                <p class="service-description">
+                                    Services additionnels pour une expérience beauté complète : manucure, soins du visage 
+                                    et autres prestations pour prendre soin de vous de la tête aux pieds.
+                                </p>
+                                <ul class="service-features">
+                                    <li>Soins du visage</li>
+                                    <li>Manucure et pédicure</li>
+                                    <li>Conseils beauté</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -116,22 +287,50 @@
                         <button class="close-page-btn">✕</button>
                     </div>
                     <div class="page-body">
-                        <p class="concept-intro">Une approche innovante de la coiffure</p>
+                        <div class="concept-header">
+                            <h3 class="concept-title">Notre Concept Révolutionnaire</h3>
+                            <p class="concept-intro">
+                                Hair'gonomie représente une rupture totale avec les interfaces web traditionnelles. 
+                                Nous avons imaginé une expérience où la navigation n'est plus une simple tâche, mais 
+                                une découverte interactive et visuellement stimulante.
+                            </p>
+                        </div>
+                        <div class="concept-sections">
+                            <div class="concept-section">
+                                <h4>💡 Idée Fondatrice</h4>
+                                <p>
+                                    L'idée centrale de Hair'gonomie est de transformer la navigation web en une expérience 
+                                    immersive et intuitive. Au lieu de menus statiques, nous proposons une forme géométrique 
+                                    3D interactive qui sert de portail vers toutes nos sections. Chaque face du cube représente 
+                                    une page, créant un lien direct entre l'action de l'utilisateur (rotation, clic) et le 
+                                    résultat (affichage de la page).
+                                </p>
+                            </div>
+                            <div class="concept-section">
+                                <h4>🌐 Vision</h4>
+                                <p>
+                                    Notre vision est de créer des interfaces qui ne sont pas seulement fonctionnelles, mais 
+                                    aussi captivantes et mémorables. Nous croyons que la technologie doit être à la fois 
+                                    puissante et belle, offrant une expérience qui émerveille tout en restant parfaitement 
+                                    utilisable et accessible.
+                                </p>
+                            </div>
+                        </div>
                         <div class="concept-visual">
                             <div class="concept-item">
-                                <span class="concept-icon">✨</span>
-                                <h3>Innovation</h3>
-                                <p>Techniques et technologies de pointe</p>
+                                <span class="concept-icon">🚀</span>
+                                <h3>Innovation Technologique</h3>
+                                <p>Utilisation de Three.js et des dernières technologies 3D pour créer une expérience fluide et performante sur tous les appareils.</p>
                             </div>
                             <div class="concept-item">
                                 <span class="concept-icon">🎨</span>
-                                <h3>Créativité</h3>
-                                <p>Design unique et personnalisé</p>
+                                <h3>Design Créatif</h3>
+                                <p>Une esthétique moderne et avant-gardiste qui transforme chaque interaction en une expérience visuelle unique et engageante.</p>
                             </div>
                             <div class="concept-item">
-                                <span class="concept-icon">💫</span>
-                                <h3>Excellence</h3>
-                                <p>Qualité et professionnalisme</p>
+                                <span class="concept-icon">✨</span>
+                                <h3>Excellence Utilisateur</h3>
+                                <p>Une navigation intuitive et ergonomique qui respecte les principes d'accessibilité tout en offrant une expérience immersive.</p>
                             </div>
                         </div>
                     </div>
@@ -146,27 +345,39 @@
                         <button class="close-page-btn">✕</button>
                     </div>
                     <div class="page-body">
-                        <p>Découvrez notre équipe de professionnels</p>
+                        <div class="team-header">
+                            <h3>Notre Équipe</h3>
+                            <p class="team-intro">
+                                Une équipe passionnée de développeurs full-stack et de designers, unis par la volonté 
+                                de créer des expériences numériques exceptionnelles.
+                            </p>
+                        </div>
                         <div class="team-grid">
                             <div class="team-card">
-                                <div class="team-avatar">👨‍💼</div>
-                                <h3>Directeur</h3>
-                                <p>Expert en gestion et stratégie</p>
+                                <div class="team-avatar">👨‍💻</div>
+                                <div class="team-badge">Leader</div>
+                                <h3>Cheikh Melainine</h3>
+                                <p class="team-role">Full-stack Developer & Leader</p>
+                                <p class="team-description">Spécialiste en architecture logicielle et développement back-end. Passionné par les nouvelles technologies et l'optimisation des performances.</p>
                             </div>
                             <div class="team-card">
-                                <div class="team-avatar">👩‍💼</div>
-                                <h3>Coordinatrice</h3>
-                                <p>Spécialiste en organisation</p>
+                                <div class="team-avatar">👨‍💻</div>
+                                <div class="team-badge">Leader</div>
+                                <h3>El Kherchi</h3>
+                                <p class="team-role">Full-stack Developer & Leader</p>
+                                <p class="team-description">Expert en développement front-end et en création d'expériences utilisateur immersives. Maîtrise de Three.js et des animations 3D.</p>
                             </div>
                             <div class="team-card">
-                                <div class="team-avatar">👨‍🎨</div>
-                                <h3>Designer</h3>
-                                <p>Créateur de styles uniques</p>
+                                <div class="team-avatar">👨‍💻</div>
+                                <h3>Bezeid</h3>
+                                <p class="team-role">Full-stack Developer</p>
+                                <p class="team-description">Développeur polyvalent avec une expertise en intégration de systèmes et en bases de données. Contribue activement à la robustesse de l'application.</p>
                             </div>
                             <div class="team-card">
                                 <div class="team-avatar">👩‍💻</div>
-                                <h3>Développeur</h3>
-                                <p>Expert en technologies</p>
+                                <h3>Oumame</h3>
+                                <p class="team-role">Développeuse & Web-Designer</p>
+                                <p class="team-description">Créatrice d'interfaces intuitives et esthétiques. Spécialisée en UI/UX design et en développement front-end, elle apporte une touche artistique à chaque projet.</p>
                             </div>
                         </div>
                     </div>
@@ -182,10 +393,67 @@
                     </div>
                     <div class="page-body">
                         <div class="about-content">
-                            <div class="about-text">
-                                <h3>Notre histoire</h3>
-                                <p>Hair'gonomie représente une nouvelle vision de la coiffure, alliant ergonomie et esthétique pour créer des expériences uniques.</p>
-                                <p>Notre mission est de révolutionner votre expérience capillaire à travers l'innovation et la créativité.</p>
+                            <div class="about-section">
+                                <h3>Notre Histoire</h3>
+                                <p>
+                                    Hair'gonomie est née d'une vision audacieuse : transformer l'expérience de navigation web 
+                                    en une aventure interactive et immersive. Fondée sur les principes d'ergonomie, d'esthétique 
+                                    et d'innovation, notre équipe s'est lancée le défi de créer une expérience numérique sans précédent.
+                                </p>
+                                <p>
+                                    Depuis nos débuts, nous nous efforçons de repousser les limites du design interactif. Chaque 
+                                    ligne de code, chaque animation, chaque détail visuel est pensé pour offrir une immersion totale 
+                                    et une navigation intuitive. Nous sommes convaincus que la technologie doit servir l'humain, en 
+                                    simplifiant les interactions tout en émerveillant.
+                                </p>
+                            </div>
+                            <div class="about-section">
+                                <h3>Notre Mission</h3>
+                                <p>
+                                    Notre mission est de révolutionner l'expérience utilisateur en développant des interfaces qui ne 
+                                    sont pas seulement fonctionnelles, mais aussi captivantes et mémorables. Nous visons à établir de 
+                                    nouvelles normes en matière de design interactif, en prouvant qu'il est possible de combiner 
+                                    performance technique et beauté artistique.
+                                </p>
+                                <p>
+                                    Nous nous engageons à innover continuellement, à écouter nos utilisateurs et à adapter nos solutions 
+                                    pour répondre aux besoins d'un monde numérique en constante évolution. Hair'gonomie est plus qu'une 
+                                    application ; c'est une philosophie, une promesse d'excellence et de créativité.
+                                </p>
+                            </div>
+                            <div class="about-section">
+                                <h3>Nos Valeurs</h3>
+                                <div class="values-grid">
+                                    <div class="value-item">
+                                        <span class="value-icon">💡</span>
+                                        <h4>Innovation</h4>
+                                        <p>Nous repoussons constamment les limites du possible</p>
+                                    </div>
+                                    <div class="value-item">
+                                        <span class="value-icon">🎯</span>
+                                        <h4>Excellence</h4>
+                                        <p>Nous visons la perfection dans chaque détail</p>
+                                    </div>
+                                    <div class="value-item">
+                                        <span class="value-icon">🤝</span>
+                                        <h4>Collaboration</h4>
+                                        <p>Nous travaillons ensemble pour créer l'exceptionnel</p>
+                                    </div>
+                                    <div class="value-item">
+                                        <span class="value-icon">🌱</span>
+                                        <h4>Évolution</h4>
+                                        <p>Nous grandissons et nous adaptons continuellement</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="about-section">
+                                <h3>Notre Vision</h3>
+                                <p>
+                                    Nous imaginons un futur où chaque interaction numérique est une expérience enrichissante et 
+                                    mémorable. Notre vision est de créer des interfaces qui inspirent, qui émerveillent et qui 
+                                    facilitent la vie de nos utilisateurs, tout en respectant les principes d'accessibilité et 
+                                    d'inclusivité.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -200,13 +468,29 @@
                         <button class="close-page-btn">✕</button>
                     </div>
                     <div class="page-body">
-                        <p>Prenez contact avec nous</p>
+                        <div class="contact-header">
+                            <h3>Contactez-nous</h3>
+                            <p class="contact-intro">
+                                Vous avez une question, un projet ou simplement envie d'échanger ? N'hésitez pas à nous 
+                                contacter. Notre équipe est à votre écoute et se fera un plaisir de vous répondre dans 
+                                les plus brefs délais.
+                            </p>
+                        </div>
                         <form class="contact-form">
-                            <input type="text" placeholder="Nom" aria-label="Nom" required>
-                            <input type="email" placeholder="Email" aria-label="Email" required>
-                            <textarea placeholder="Message" aria-label="Message" required></textarea>
-                            <button type="submit">Envoyer</button>
+                            <label for="contact-name">Votre Nom</label>
+                            <input type="text" id="contact-name" placeholder="Votre Nom" aria-label="Nom" required>
+                            <label for="contact-email">Votre Email</label>
+                            <input type="email" id="contact-email" placeholder="Votre Email" aria-label="Email" required>
+                            <label for="contact-message">Votre Message</label>
+                            <textarea id="contact-message" placeholder="Votre Message" aria-label="Message" required></textarea>
+                            <button type="submit">Envoyer le Message</button>
                         </form>
+                        <div class="contact-info">
+                            <h4>Informations de Contact</h4>
+                            <p><strong>Email:</strong> contact@hairgonomie.com</p>
+                            <p><strong>Téléphone:</strong> +33 1 23 45 67 89</p>
+                            <p><strong>Adresse:</strong> 123 Rue de l'Innovation, 75001 Paris, France</p>
+                        </div>
                     </div>
                 </div>
             </div>
