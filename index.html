@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hair'gonomie - Navigation 3D Innovante</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- Écran de chargement -->
+    <div id="loader" class="loader">
+        <div class="loader-content">
+            <div class="loader-shape"></div>
+            <p>Chargement de l'expérience...</p>
+        </div>
+    </div>
+
+    <!-- Contrôles d'accessibilité -->
+    <div class="accessibility-controls">
+        <button id="reduce-motion" class="accessibility-btn" aria-label="Réduire les animations">
+            <span>⚙️</span>
+        </button>
+        <button id="close-page" class="accessibility-btn hidden" aria-label="Fermer la page">
+            <span>✕</span>
+        </button>
+    </div>
+
+    <!-- Conteneur principal -->
+    <div id="app-container" class="app-container">
+        <!-- Canvas 3D pour la forme spectrale de bienvenue -->
+        <canvas id="spectrum-canvas" class="spectrum-canvas"></canvas>
+        
+        <!-- Canvas 3D pour le cube de navigation -->
+        <canvas id="cube-canvas" class="cube-canvas hidden"></canvas>
+
+        <!-- Message de bienvenue avec forme spectrale -->
+        <div id="welcome-screen" class="welcome-screen">
+            <div class="welcome-content">
+                <h1 class="welcome-title">Bienvenue dans Hair'gonomie</h1>
+                <p class="welcome-subtitle">Une expérience de navigation révolutionnaire</p>
+                <div class="welcome-intro">
+                    <p>Explorez notre univers à travers une forme 3D interactive.</p>
+                    <p>Chaque face vous mènera vers une nouvelle découverte.</p>
+                </div>
+                <button id="start-experience" class="start-button">Commencer l'expérience</button>
+            </div>
+        </div>
+
+        <!-- Introduction de l'application -->
+        <div id="intro-screen" class="intro-screen hidden">
+            <div class="intro-content">
+                <h2>Découvrez notre interface 3D</h2>
+                <p>Interagissez avec le cube pour explorer nos différentes sections</p>
+                <p class="intro-hint">Cliquez sur une face ou faites-la tourner</p>
+            </div>
+        </div>
+
+        <!-- Conteneur du cube 3D interactif -->
+        <div id="cube-container" class="cube-container hidden">
+        </div>
+
+        <!-- Conteneur des pages (qui s'ouvrent depuis le cube) -->
+        <div id="pages-overlay" class="pages-overlay hidden">
+            <!-- Page Accueil -->
+            <div class="page-content" id="page-accueil" data-face="0">
+                <div class="page-wrapper">
+                    <div class="page-header">
+                        <h2>Accueil</h2>
+                        <button class="close-page-btn">✕</button>
+                    </div>
+                    <div class="page-body">
+                        <div class="page-visual">
+                            <div class="floating-shape"></div>
+                        </div>
+                        <p>Bienvenue dans l'univers Hair'gonomie, où l'innovation rencontre l'esthétique.</p>
+                        <p>Découvrez une nouvelle façon d'interagir avec le contenu.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Services -->
+            <div class="page-content" id="page-services" data-face="1">
+                <div class="page-wrapper">
+                    <div class="page-header">
+                        <h2>Services</h2>
+                        <button class="close-page-btn">✕</button>
+                    </div>
+                    <div class="page-body">
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <div class="service-icon">✂️</div>
+                                <h3>Coupe</h3>
+                                <p>Création de coupes sur mesure adaptées à votre style</p>
+                            </div>
+                            <div class="service-card">
+                                <div class="service-icon">🎨</div>
+                                <h3>Coloration</h3>
+                                <p>Techniques de coloration avancées et tendances</p>
+                            </div>
+                            <div class="service-card">
+                                <div class="service-icon">💆</div>
+                                <h3>Soins</h3>
+                                <p>Soins capillaires personnalisés et traitements</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Concept -->
+            <div class="page-content" id="page-concept" data-face="2">
+                <div class="page-wrapper">
+                    <div class="page-header">
+                        <h2>Concept</h2>
+                        <button class="close-page-btn">✕</button>
+                    </div>
+                    <div class="page-body">
+                        <p class="concept-intro">Une approche innovante de la coiffure</p>
+                        <div class="concept-visual">
+                            <div class="concept-item">
+                                <span class="concept-icon">✨</span>
+                                <h3>Innovation</h3>
+                                <p>Techniques et technologies de pointe</p>
+                            </div>
+                            <div class="concept-item">
+                                <span class="concept-icon">🎨</span>
+                                <h3>Créativité</h3>
+                                <p>Design unique et personnalisé</p>
+                            </div>
+                            <div class="concept-item">
+                                <span class="concept-icon">💫</span>
+                                <h3>Excellence</h3>
+                                <p>Qualité et professionnalisme</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Equipes -->
+            <div class="page-content" id="page-equipes" data-face="3">
+                <div class="page-wrapper">
+                    <div class="page-header">
+                        <h2>Equipes</h2>
+                        <button class="close-page-btn">✕</button>
+                    </div>
+                    <div class="page-body">
+                        <p>Découvrez notre équipe de professionnels</p>
+                        <div class="team-grid">
+                            <div class="team-card">
+                                <div class="team-avatar">👨‍💼</div>
+                                <h3>Directeur</h3>
+                                <p>Expert en gestion et stratégie</p>
+                            </div>
+                            <div class="team-card">
+                                <div class="team-avatar">👩‍💼</div>
+                                <h3>Coordinatrice</h3>
+                                <p>Spécialiste en organisation</p>
+                            </div>
+                            <div class="team-card">
+                                <div class="team-avatar">👨‍🎨</div>
+                                <h3>Designer</h3>
+                                <p>Créateur de styles uniques</p>
+                            </div>
+                            <div class="team-card">
+                                <div class="team-avatar">👩‍💻</div>
+                                <h3>Développeur</h3>
+                                <p>Expert en technologies</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page À propos -->
+            <div class="page-content" id="page-about" data-face="4">
+                <div class="page-wrapper">
+                    <div class="page-header">
+                        <h2>À propos</h2>
+                        <button class="close-page-btn">✕</button>
+                    </div>
+                    <div class="page-body">
+                        <div class="about-content">
+                            <div class="about-text">
+                                <h3>Notre histoire</h3>
+                                <p>Hair'gonomie représente une nouvelle vision de la coiffure, alliant ergonomie et esthétique pour créer des expériences uniques.</p>
+                                <p>Notre mission est de révolutionner votre expérience capillaire à travers l'innovation et la créativité.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Contact -->
+            <div class="page-content" id="page-contact" data-face="5">
+                <div class="page-wrapper">
+                    <div class="page-header">
+                        <h2>Contact</h2>
+                        <button class="close-page-btn">✕</button>
+                    </div>
+                    <div class="page-body">
+                        <p>Prenez contact avec nous</p>
+                        <form class="contact-form">
+                            <input type="text" placeholder="Nom" aria-label="Nom" required>
+                            <input type="email" placeholder="Email" aria-label="Email" required>
+                            <textarea placeholder="Message" aria-label="Message" required></textarea>
+                            <button type="submit">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
