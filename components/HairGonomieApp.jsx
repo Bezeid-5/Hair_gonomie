@@ -9,6 +9,7 @@ export default function HairGonomieApp() {
   const [currentScreen, setCurrentScreen] = useState('welcome')
   const [currentPage, setCurrentPage] = useState(null)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [showGuide, setShowGuide] = useState(false)
 
   // Refs pour Three.js
   const spectrumCanvasRef = useRef(null)
@@ -651,13 +652,16 @@ export default function HairGonomieApp() {
       )}
 
       <div className="accessibility-controls">
-        <button
+          <button
           id="reduce-motion"
           className={`accessibility-btn ${reduceMotion ? 'active' : ''}`}
           onClick={handleToggleReduceMotion}
           aria-label="Réduire les animations"
         >
-          <span>⚙️</span>
+          <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+          </svg>
         </button>
         {currentScreen === 'page' && (
           <button
@@ -666,7 +670,26 @@ export default function HairGonomieApp() {
             onClick={handleClosePage}
             aria-label="Fermer la page"
           >
-            <span>✕</span>
+            <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        )}
+        {currentScreen === 'cube' && (
+          <button
+            id="guide-toggle"
+            className="accessibility-btn"
+            onClick={() => setShowGuide(!showGuide)}
+            aria-label="Ouvrir le guide"
+          >
+            <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              <path d="M8 7h6"></path>
+              <path d="M8 11h6"></path>
+              <path d="M8 15h4"></path>
+            </svg>
           </button>
         )}
       </div>
@@ -1080,6 +1103,55 @@ export default function HairGonomieApp() {
           )}
         </div>
       </div>
+
+      {/* Overlay du guide de navigation */}
+      {showGuide && (
+        <div 
+          className={`guide-overlay ${showGuide ? 'active' : ''}`}
+          onClick={(e) => {
+            if (e.target.classList.contains('guide-overlay')) {
+              setShowGuide(false)
+            }
+          }}
+        >
+          <div className="guide-modal">
+            <div className="guide-header">
+              <h2 className="guide-title">Guide de Navigation</h2>
+            </div>
+            <div className="guide-content">
+              <div className="guide-instructions-compact">
+                <div className="instruction-compact">
+                  <svg className="instruction-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+                  </svg>
+                  <span>Molette ou glisser pour tourner</span>
+                </div>
+                <div className="instruction-compact">
+                  <svg className="instruction-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>Cliquer sur une face pour ouvrir</span>
+                </div>
+              </div>
+              
+              <div className="guide-pages-compact">
+                <h3 className="guide-pages-title">Pages</h3>
+                <div className="pages-grid-compact">
+                  {CONFIG.faces.map((face, index) => (
+                    <div key={index} className="page-guide-compact" data-color={face.name.toLowerCase().replace(' ', '-')}>
+                      <span className={`page-color-dot color-${face.name.toLowerCase().replace(' ', '-')}`} style={{ backgroundColor: `#${face.color.toString(16).padStart(6, '0')}` }}></span>
+                      <span className="page-name">{face.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
