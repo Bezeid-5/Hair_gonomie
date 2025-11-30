@@ -12,6 +12,11 @@
 /.next/
 /out/
 
+# Old vanilla files (not needed with Next.js)
+/index.html
+/app.js
+/styles.css
+
 # production
 /build
 
