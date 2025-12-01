@@ -14,6 +14,8 @@ export default function HairGonomieApp() {
   // Refs pour Three.js
   const spectrumCanvasRef = useRef(null)
   const cubeCanvasRef = useRef(null)
+  // Ref pour accéder à currentScreen dans la boucle d'animation
+  const currentScreenRef = useRef('welcome')
   const stateRef = useRef({
     spectrumScene: null,
     spectrumCamera: null,
@@ -186,12 +188,51 @@ export default function HairGonomieApp() {
 
   // Initialisation du cube
   const initCube = () => {
-    if (!cubeCanvasRef.current) return
+    if (!cubeCanvasRef.current) {
+      console.warn('Cube canvas ref not available')
+      return
+    }
+
+    // Vérifier que Three.js est bien chargé
+    if (!THREE || !THREE.Scene || !THREE.WebGLRenderer) {
+      console.error('Three.js is not properly loaded', THREE)
+      return
+    }
 
     const canvas = cubeCanvasRef.current
+    const state = stateRef.current
+    
+    // Vérifier si déjà initialisé
+    if (state.cube && state.cubeRenderer) {
+      console.log('Cube already initialized')
+      // S'assurer que le canvas est visible
+      if (canvas.classList.contains('hidden')) {
+        canvas.classList.remove('hidden')
+      }
+      return
+    }
+    
+    // S'assurer que le canvas est visible
+    if (canvas.classList.contains('hidden')) {
+      canvas.classList.remove('hidden')
+    }
+    // Forcer le display
+    canvas.style.display = 'block'
+    canvas.style.visibility = 'visible'
+    
     const width = window.innerWidth
     const height = window.innerHeight
-    const state = stateRef.current
+    
+    console.log('🔄 Initializing cube...', { 
+      width, 
+      height, 
+      canvasWidth: canvas.offsetWidth,
+      canvasHeight: canvas.offsetHeight,
+      canvasDisplay: window.getComputedStyle(canvas).display,
+      THREE: !!THREE,
+      THREE_Scene: !!THREE?.Scene,
+      THREE_WebGLRenderer: !!THREE?.WebGLRenderer
+    })
 
     // Scène
     state.cubeScene = new THREE.Scene()
@@ -323,6 +364,29 @@ export default function HairGonomieApp() {
 
     state.cubeParticles = new THREE.Points(particlesGeometry, particlesMaterial)
     state.cubeScene.add(state.cubeParticles)
+    
+    console.log('✅ Cube initialized successfully', {
+      cube: !!state.cube,
+      renderer: !!state.cubeRenderer,
+      scene: !!state.cubeScene,
+      camera: !!state.cubeCamera,
+      particles: !!state.cubeParticles,
+      canvasWidth: canvas.offsetWidth,
+      canvasHeight: canvas.offsetHeight,
+      canvasDisplay: window.getComputedStyle(canvas).display
+    })
+    
+    // Rendre immédiatement pour vérifier
+    if (state.cubeRenderer && state.cubeScene && state.cubeCamera) {
+      state.cubeRenderer.render(state.cubeScene, state.cubeCamera)
+      console.log('✅ First render completed')
+    } else {
+      console.error('❌ Cannot render cube - missing components', {
+        renderer: !!state.cubeRenderer,
+        scene: !!state.cubeScene,
+        camera: !!state.cubeCamera
+      })
+    }
   }
 
   // Animation
@@ -333,9 +397,12 @@ export default function HairGonomieApp() {
     const animateLoop = () => {
       state.animationFrameId = requestAnimationFrame(animateLoop)
       time = Date.now() * 0.001
+      
+      // Utiliser le ref pour obtenir la valeur actuelle de currentScreen
+      const screen = currentScreenRef.current
 
       // Animer le spectre
-      if (state.spectrumShape && currentScreen === 'welcome') {
+      if (state.spectrumShape && screen === 'welcome') {
         state.spectrumShape.rotation.x += 0.008
         state.spectrumShape.rotation.y += 0.01
         state.spectrumShape.rotation.z += 0.005
@@ -385,7 +452,7 @@ export default function HairGonomieApp() {
       }
 
       // Animer le cube
-      if (state.cube && currentScreen === 'cube') {
+      if (state.cube && screen === 'cube') {
         // Auto-rotation
         if (state.autoRotate && !state.isDragging && !reduceMotion) {
           state.targetRotation.y += CONFIG.autoRotateSpeed
@@ -442,30 +509,148 @@ export default function HairGonomieApp() {
   // Gestion des événements
   const handleStartExperience = () => {
     setCurrentScreen('intro')
+    currentScreenRef.current = 'intro'
     setTimeout(() => {
-      initCube()
+      // Passer à l'écran cube - le useEffect s'occupera d'initialiser le cube
       setCurrentScreen('cube')
-    }, 100)
+      currentScreenRef.current = 'cube'
+    }, 3000) // Délai pour laisser le temps à l'intro de s'afficher
   }
 
   const handleCubeClick = (event) => {
+    console.log('🔵 Click detected on canvas')
     const state = stateRef.current
-    if (!state.cube || !state.raycaster || !state.cubeCamera || currentScreen !== 'cube') return
+    
+    if (!state.cube) {
+      console.error('❌ Cube not initialized')
+      return
+    }
+    if (!state.raycaster) {
+      console.error('❌ Raycaster not initialized')
+      return
+    }
+    if (!state.cubeCamera) {
+      console.error('❌ Camera not initialized')
+      return
+    }
+    if (currentScreenRef.current !== 'cube') {
+      console.error('❌ Not on cube screen:', currentScreenRef.current)
+      return
+    }
 
     state.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
     state.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
+    console.log('📍 Mouse position:', { x: state.mouse.x, y: state.mouse.y })
+
     state.raycaster.setFromCamera(state.mouse, state.cubeCamera)
-    const intersects = state.raycaster.intersectObject(state.cube)
+    // Intersecter uniquement avec le cube principal (pas les enfants comme glow, edges)
+    const intersects = state.raycaster.intersectObject(state.cube, false)
+
+    console.log('🎯 Intersections found:', intersects.length, intersects)
 
     if (intersects.length > 0) {
-      const materialIndex = intersects[0].face.materialIndex
-      let faceIndex = materialIndex
-      if (faceIndex >= CONFIG.faces.length) {
-        faceIndex = faceIndex % CONFIG.faces.length
+      // Trouver la première intersection avec le cube principal qui a une face valide
+      let intersection = null
+      for (let i = 0; i < intersects.length; i++) {
+        if (intersects[i].object === state.cube && intersects[i].face) {
+          intersection = intersects[i]
+          break
+        }
       }
+      
+      if (!intersection) {
+        console.error('❌ No valid intersection with cube face found', intersects)
+        return
+      }
+      
+      // Vérifier que l'intersection a une face valide
+      if (!intersection.face) {
+        console.error('❌ Intersection has no face:', intersection)
+        // Essayer d'utiliser l'objet et la normale pour déterminer la face
+        if (intersection.object && intersection.object === state.cube) {
+          // Calculer la face à partir de la normale
+          const normal = intersection.face?.normal || new THREE.Vector3()
+          if (intersection.normal) {
+            normal.copy(intersection.normal)
+          }
+          
+          // Trouver la face la plus proche de la normale
+          // Pour un cube, on peut utiliser la direction de la normale
+          const absNormal = new THREE.Vector3(
+            Math.abs(normal.x),
+            Math.abs(normal.y),
+            Math.abs(normal.z)
+          )
+          
+          // Déterminer quelle face est la plus proche
+          let maxComponent = Math.max(absNormal.x, absNormal.y, absNormal.z)
+          let materialIndex = 0
+          
+          if (maxComponent === absNormal.x) {
+            materialIndex = normal.x > 0 ? 0 : 1 // right : left
+          } else if (maxComponent === absNormal.y) {
+            materialIndex = normal.y > 0 ? 2 : 3 // top : bottom
+          } else {
+            materialIndex = normal.z > 0 ? 4 : 5 // front : back
+          }
+          
+          console.log('🎨 Calculated material index from normal:', materialIndex)
+          
+          // Utiliser le materialIndex pour trouver la page
+          let faceIndex = materialIndex
+          if (faceIndex >= CONFIG.faces.length) {
+            faceIndex = faceIndex % CONFIG.faces.length
+          }
+          
+          console.log('📄 Opening page:', CONFIG.faces[faceIndex].name, 'at index', faceIndex)
+          setCurrentPage(faceIndex)
+          setCurrentScreen('page')
+          currentScreenRef.current = 'page'
+        }
+        return
+      }
+      
+      const materialIndex = intersection.face.materialIndex
+      console.log('🎨 Material index:', materialIndex)
+      
+      // Récupérer le matériau de la face cliquée
+      const material = state.cube.material[materialIndex]
+      if (!material) {
+        console.error('❌ Material not found at index:', materialIndex)
+        return
+      }
+      
+      // Récupérer la couleur du matériau (en hexadécimal)
+      const clickedColor = material.color.getHex()
+      console.log('🎨 Clicked color:', '0x' + clickedColor.toString(16))
+      
+      // Trouver l'index de la page correspondant à cette couleur
+      let faceIndex = -1
+      for (let i = 0; i < CONFIG.faces.length; i++) {
+        if (CONFIG.faces[i].color === clickedColor) {
+          faceIndex = i
+          console.log('✅ Found matching page:', CONFIG.faces[i].name, 'at index', i)
+          break
+        }
+      }
+      
+      // Si on n'a pas trouvé de correspondance, utiliser le materialIndex comme fallback
+      if (faceIndex === -1) {
+        console.warn('⚠️ No color match found, using materialIndex as fallback')
+        faceIndex = materialIndex
+        if (faceIndex >= CONFIG.faces.length) {
+          faceIndex = faceIndex % CONFIG.faces.length
+        }
+      }
+      
+      console.log('📄 Opening page:', CONFIG.faces[faceIndex].name, 'at index', faceIndex)
+      
       setCurrentPage(faceIndex)
       setCurrentScreen('page')
+      currentScreenRef.current = 'page'
+    } else {
+      console.warn('⚠️ No intersections found')
     }
   }
 
@@ -473,10 +658,16 @@ export default function HairGonomieApp() {
     const state = stateRef.current
     setCurrentPage(null)
     setCurrentScreen('cube')
+    currentScreenRef.current = 'cube'
     if (!reduceMotion) {
       state.autoRotate = true
     }
   }
+
+  // Effet pour synchroniser le ref avec currentScreen
+  useEffect(() => {
+    currentScreenRef.current = currentScreen
+  }, [currentScreen])
 
   // Effet d'initialisation
   useEffect(() => {
@@ -511,7 +702,7 @@ export default function HairGonomieApp() {
 
     // Gestion du scroll
     const handleWheel = (e) => {
-      if (reduceMotion || currentScreen !== 'cube') return
+      if (reduceMotion || currentScreenRef.current !== 'cube') return
       e.preventDefault()
       const state = stateRef.current
       state.targetRotation.y += e.deltaY * CONFIG.scrollSensitivity
@@ -525,7 +716,7 @@ export default function HairGonomieApp() {
 
     // Gestion du drag
     const handleMouseDown = (e) => {
-      if (currentScreen !== 'cube') return
+      if (currentScreenRef.current !== 'cube') return
       const state = stateRef.current
       state.isDragging = true
       state.autoRotate = false
@@ -535,11 +726,11 @@ export default function HairGonomieApp() {
 
     const handleMouseMove = (e) => {
       const state = stateRef.current
-      if (!state.isDragging || currentScreen !== 'cube') return
+      if (!state.isDragging || currentScreenRef.current !== 'cube') return
       const deltaX = e.clientX - state.dragStart.x
       const deltaY = e.clientY - state.dragStart.y
-      state.targetRotation.x += deltaY * 0.01
       state.targetRotation.y += deltaX * 0.01
+      state.targetRotation.x += deltaY * 0.01
       state.dragStart.x = e.clientX
       state.dragStart.y = e.clientY
     }
@@ -547,7 +738,7 @@ export default function HairGonomieApp() {
     const handleMouseUp = () => {
       const state = stateRef.current
       state.isDragging = false
-      if (!reduceMotion) {
+      if (currentScreenRef.current === 'cube' && !reduceMotion) {
         state.autoRotate = true
       }
     }
@@ -559,7 +750,7 @@ export default function HairGonomieApp() {
     // Gestion du touch
     let touchStart = { x: 0, y: 0 }
     const handleTouchStart = (e) => {
-      if (currentScreen !== 'cube') return
+      if (currentScreenRef.current !== 'cube') return
       const touch = e.touches[0]
       touchStart.x = touch.clientX
       touchStart.y = touch.clientY
@@ -570,13 +761,13 @@ export default function HairGonomieApp() {
 
     const handleTouchMove = (e) => {
       const state = stateRef.current
-      if (!state.isDragging || currentScreen !== 'cube') return
+      if (!state.isDragging || currentScreenRef.current !== 'cube') return
       e.preventDefault()
       const touch = e.touches[0]
       const deltaX = touch.clientX - touchStart.x
       const deltaY = touch.clientY - touchStart.y
-      state.targetRotation.x += deltaY * CONFIG.touchSensitivity
       state.targetRotation.y += deltaX * CONFIG.touchSensitivity
+      state.targetRotation.x += deltaY * CONFIG.touchSensitivity
       touchStart.x = touch.clientX
       touchStart.y = touch.clientY
     }
@@ -584,7 +775,7 @@ export default function HairGonomieApp() {
     const handleTouchEnd = () => {
       const state = stateRef.current
       state.isDragging = false
-      if (!reduceMotion) {
+      if (currentScreenRef.current === 'cube' && !reduceMotion) {
         state.autoRotate = true
       }
     }
@@ -609,13 +800,103 @@ export default function HairGonomieApp() {
     }
   }, [])
 
+  // Effet pour initialiser le cube quand on passe à l'écran cube
+  useEffect(() => {
+    if (currentScreen === 'cube' && cubeCanvasRef.current) {
+      const canvas = cubeCanvasRef.current
+      
+      // S'assurer que le canvas est visible AVANT d'initialiser
+      if (canvas.classList.contains('hidden')) {
+        canvas.classList.remove('hidden')
+      }
+      // Forcer le display au cas où
+      canvas.style.display = 'block'
+      
+      // Vérifier si le cube est déjà initialisé
+      if (!stateRef.current.cube) {
+        console.log('🔄 Initializing cube on cube screen', { 
+          THREE: !!THREE, 
+          THREE_Scene: !!THREE?.Scene,
+          canvas: !!canvas,
+          canvasWidth: canvas.offsetWidth,
+          canvasHeight: canvas.offsetHeight,
+          canvasDisplay: window.getComputedStyle(canvas).display
+        })
+        // Petit délai pour s'assurer que le canvas est monté et visible
+        setTimeout(() => {
+          initCube()
+        }, 200)
+      } else {
+        console.log('✅ Cube already initialized, ensuring visibility')
+        // S'assurer que le canvas est visible si le cube est déjà initialisé
+        canvas.style.display = 'block'
+        // Forcer un rendu
+        const state = stateRef.current
+        if (state.cubeRenderer && state.cubeScene && state.cubeCamera) {
+          state.cubeRenderer.render(state.cubeScene, state.cubeCamera)
+        }
+      }
+    }
+  }, [currentScreen])
+
   // Effet pour gérer le clic sur le cube
   useEffect(() => {
     if (currentScreen === 'cube' && cubeCanvasRef.current) {
-      cubeCanvasRef.current.addEventListener('click', handleCubeClick)
+      const canvas = cubeCanvasRef.current
+      console.log('✅ Attaching click listener to cube canvas', {
+        canvas: !!canvas,
+        canvasWidth: canvas.offsetWidth,
+        canvasHeight: canvas.offsetHeight,
+        pointerEvents: window.getComputedStyle(canvas).pointerEvents,
+        zIndex: window.getComputedStyle(canvas).zIndex
+      })
+      
+      // S'assurer que le canvas peut recevoir les clics
+      canvas.style.pointerEvents = 'auto'
+      canvas.style.cursor = 'pointer'
+      canvas.style.zIndex = '1'
+      
+      // Attacher l'événement avec capture pour s'assurer qu'il est capturé
+      const clickHandler = (e) => {
+        console.log('🖱️ Raw click event detected', e)
+        handleCubeClick(e)
+      }
+      
+      // Attacher plusieurs types d'événements pour debug
+      canvas.addEventListener('click', clickHandler, true) // true = capture phase
+      canvas.addEventListener('mousedown', (e) => {
+        console.log('🖱️ Mousedown detected on canvas', {
+          target: e.target,
+          currentTarget: e.currentTarget,
+          clientX: e.clientX,
+          clientY: e.clientY
+        })
+        // Ne pas empêcher le comportement par défaut pour voir si click se déclenche
+      }, true)
+      canvas.addEventListener('mouseup', (e) => {
+        console.log('🖱️ Mouseup detected on canvas', e)
+      }, true)
+      
+      // Test : attacher aussi sur window pour voir si les clics passent
+      const windowClickHandler = (e) => {
+        if (e.target === canvas || canvas.contains(e.target)) {
+          console.log('🖱️ Click detected on window, target is canvas')
+        }
+      }
+      window.addEventListener('click', windowClickHandler, true)
+      
       return () => {
-        if (cubeCanvasRef.current) {
-          cubeCanvasRef.current.removeEventListener('click', handleCubeClick)
+        if (canvas) {
+          console.log('🗑️ Removing click listener from cube canvas')
+          canvas.removeEventListener('click', clickHandler, true)
+          window.removeEventListener('click', windowClickHandler, true)
+        }
+      }
+      
+      return () => {
+        if (canvas) {
+          console.log('🗑️ Removing click listener from cube canvas')
+          canvas.removeEventListener('click', clickHandler, true)
         }
       }
     }
